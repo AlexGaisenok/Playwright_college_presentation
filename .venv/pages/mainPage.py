@@ -1,5 +1,5 @@
 destination = '//div[@data-ti="desktop_input_wrapper"]//input[@placeholder="Откуда"]'
 final_destination = '//div[@data-ti="desktop_input_wrapper"]//input[@placeholder="Куда"]'
 departure_date = '//input[@placeholder="Дата вылета"]'
-depart_date_calendar = '//*[@class="DayPicker-Day-day-cell" and @data-day="13"]'
+depart_date_calendar = '//*[@class="DayPicker-Day-day-cell" and @data-day="30"]'
 button_find_tickets = '//button[@data-ti="form_submit_button"]'

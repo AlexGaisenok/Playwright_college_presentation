@@ -27,15 +27,21 @@ with sync_playwright() as p:
     buttonFind = page.locator(button_find_tickets)
     buttonFind.wait_for(state='visible', timeout=10000)
     buttonFind.click()
+    # Ждём, пока появится хотя бы один элемент с ценой
+    page.wait_for_selector('xpath=//*[@data-ti="price" and contains(text(), "₽")]', state='visible', timeout=15000)
 
-    # Создаём Locator для всех цен
-    price_locator = page.locator('xpath=//*[@data-ti="price" and contains(text(), "₽")]')
+    # Потом ждём, пока их количество перестанет меняться (просто короткий цикл)
+    previous_count = 0
+    for _ in range(10):  # максимум 10 попыток
+        current_count = page.locator('xpath=//*[@data-ti="price" and contains(text(), "₽")]').count()
+        if current_count == previous_count and current_count > 0:
+            break  # список стабилизировался
+        previous_count = current_count
+        page.wait_for_timeout(500)  # подождать полсекунды
 
-    # Ждём, пока появится хотя бы один элемент
-    price_locator.nth(0).wait_for(state='visible', timeout=15000)
+    # Теперь можно уверенно получить все элементы
+    price_elements = page.locator('xpath=//*[@data-ti="price" and contains(text(), "₽")]').all()
 
-    # После этого получаем все элементы как список
-    price_elements = price_locator.all()
     # 2. Преобразуем текст цен в числа
     prices_dict = {}  # словарь: элемент → цена
     for el in price_elements:
